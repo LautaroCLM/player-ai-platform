@@ -128,3 +128,12 @@
     @apply font-sans;
   }
 }
+
+/* Respect users who request reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root, * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
