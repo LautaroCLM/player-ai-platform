@@ -1,6 +1,7 @@
 import Sidebar from "@/components/Sidebar";
 import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
+import UploadZone from "@/components/UploadZone";
 
 export default function Home() {
   return (
@@ -55,6 +56,8 @@ export default function Home() {
             </p>
           </Card>
         </div>
+        {/* Upload zone placed below the cards */}
+        <UploadZone />
       </section>
     </main>
   );
