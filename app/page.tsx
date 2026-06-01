@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
@@ -9,12 +10,22 @@ import { supabase } from "@/lib/supabase";
 
 export default function Home() {
   const [email, setEmail] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setEmail(data.user?.email || "");
-    });
-  }, []);
+    const checkUser = async () => {
+      const { data } = await supabase.auth.getUser();
+
+      if (!data.user) {
+        router.push("/login");
+        return;
+      }
+
+      setEmail(data.user.email || "");
+    };
+
+    checkUser();
+  }, [router]);
 
   const logout = async () => {
     await supabase.auth.signOut();
@@ -34,7 +45,10 @@ export default function Home() {
             <p className="text-zinc-400 mt-2">Create AI football content instantly.</p>
           </div>
 
-          <Button onClick={logout}>Logout</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={() => router.push("/projects")} className="bg-zinc-800">Historial</Button>
+            <Button onClick={logout}>Logout</Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-3 gap-6">

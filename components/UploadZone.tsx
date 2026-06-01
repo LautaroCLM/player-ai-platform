@@ -2,17 +2,45 @@
 
 import { Upload, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { uploadImage } from "@/lib/storage";
+import { createProject } from "@/lib/projects";
+import { supabase } from "@/lib/supabase";
 
 export default function UploadZone() {
   const [preview, setPreview] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleImage = (file: File) => {
+  const handleImage = async (file: File) => {
     if (!file) return;
-    if (preview) URL.revokeObjectURL(preview);
-    const imageUrl = URL.createObjectURL(file);
-    setPreview(imageUrl);
+
+    try {
+      const imageUrl = await uploadImage(file);
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      console.log("USER:", user);
+      console.log("USER ID:", user?.id);
+      console.log("IMAGE URL:", imageUrl);
+
+      if (!user) {
+        alert("User not logged in");
+        return;
+      }
+
+      await createProject(user.id, imageUrl);
+
+      setPreview(imageUrl);
+    } catch (err) {
+      // fallback to local preview on any error
+      if (preview) URL.revokeObjectURL(preview);
+      const imageUrl = URL.createObjectURL(file);
+      setPreview(imageUrl);
+      console.error("Upload / save failed:", err);
+      alert("Upload failed, showing local preview. Check console for details.");
+    }
   };
 
   useEffect(() => {
