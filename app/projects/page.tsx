@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import Card from "@/components/ui/card";
 import { supabase } from "@/lib/supabase";
@@ -13,6 +14,7 @@ type Project = {
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     loadProjects();
@@ -56,10 +58,12 @@ export default function ProjectsPage() {
             <div className="text-zinc-500">No projects yet.</div>
           ) : (
             projects.map((project: Project) => (
-              <Card key={project.id} className="bg-zinc-950/80 backdrop-blur border-zinc-800 p-6">
-                <img src={project.image_url} alt="project" className="w-full h-48 object-cover mb-4 rounded" />
-                <div className="text-sm text-zinc-400">{new Date(project.created_at).toLocaleDateString()}</div>
-              </Card>
+              <div key={project.id} onClick={() => router.push(`/projects/${project.id}`)} className="cursor-pointer">
+                <Card className="bg-zinc-950/80 backdrop-blur border-zinc-800 p-6 hover:shadow-lg transition">
+                  <img src={project.image_url} alt="project" className="w-full h-48 object-cover mb-4 rounded" />
+                  <div className="text-sm text-zinc-400">{new Date(project.created_at).toLocaleDateString()}</div>
+                </Card>
+              </div>
             ))
           )}
         </div>

@@ -58,11 +58,7 @@ export default function Home() {
             <p className="text-zinc-400">Generate professional matchday posters.</p>
           </Card>
 
-          <Card className="bg-zinc-950/80 backdrop-blur border-zinc-800 p-6">
-            <h2 className="text-xl font-semibold mb-2">AI Captions</h2>
-
-            <p className="text-zinc-400">Generate football social media captions.</p>
-          </Card>
+          {/* AI Captions card removed from dashboard as requested */}
 
           <Card className="bg-zinc-950/80 backdrop-blur border-zinc-800 p-6">
             <h2 className="text-xl font-semibold mb-2">Templates</h2>
